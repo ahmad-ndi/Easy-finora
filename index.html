@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UberPay Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+        font-family: sans-serif;
+    }
+
+    body {
+        background-image: url(2.jpeg);
+        background-repeat: no-repeat;
+        background-size: cover;        
+        background-position: center;    
+        background-attachment: fixed;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .main-box {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+    }
+
+    /* Main content area - FIXED SCROLL ISSUE */
+    .main-content {
+        margin-left: 280px; /* Same as sidebar width */
+        width: calc(100% - 280px);
+        min-height: 100vh;
+        padding-top: 20px; /* Reduced padding since boxes are not fixed anymore */
+        padding-bottom: 100px;
+    }
+
+    /* Top Header Section - UPDATED: Single box for search and profile */
+    .top-header {
+        width: 1000px;
+        margin: 20px auto 30px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    /* UPDATED: Single box containing both search and profile */
+    .search-profile-box {
+        background-color: rgba(255,255,255,0.1);
+        box-shadow: 0 0 6px rgba(255,255,255,0.2);
+        border-radius: 10px;
+        padding: 20px 30px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        border-left: 1px solid transparent;
+        border-top: 3px solid rgba(100, 150, 255, 0.7);
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1000px;
+        gap: 40px;
+    }
+
+    /* Hover effect for outer box */
+    .search-profile-box:hover {
+        transform: translateY(-5px);
+        border-left: 1px solid #fff;
+        box-shadow: 2px 2px 8px rgba(255,255,255,0.3);
+        background-color: rgba(255,255,255,0.15);
+    }
+
+    /* Focus/click glow effect on outer box */
+    .search-profile-box.focused {
+        box-shadow: 0 0 20px rgba(255,255,255,0.6),
+                    0 0 30px rgba(100, 150, 255, 0.4),
+                    0 0 40px rgba(100, 150, 255, 0.2);
+        background-color: rgba(255,255,255,0.2);
+        border-left: 1px solid rgba(255,255,255,0.8);
+        animation: pulse 2s infinite;
+    }
+
+    /* Pulsing animation for glow effect */
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 20px rgba(255,255,255,0.6),
+                        0 0 30px rgba(100, 150, 255, 0.4),
+                        0 0 40px rgba(100, 150, 255, 0.2);
+        }
+        50% {
+            box-shadow: 0 0 25px rgba(255,255,255,0.7),
+                        0 0 35px rgba(100, 150, 255, 0.5),
+                        0 0 45px rgba(100, 150, 255, 0.3);
+        }
+        100% {
+            box-shadow: 0 0 20px rgba(255,255,255,0.6),
+                        0 0 30px rgba(100, 150, 255, 0.4),
+                        0 0 40px rgba(100, 150, 255, 0.2);
+        }
+    }
+
+    /* Left side: Search section */
+    .search-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    /* Search container */
+    .search-container-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        background-color: rgba(255,255,255,0.08);
+        box-shadow: 0 0 4px rgba(255,255,255,0.1);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Hover effect for inner search box */
+    .search-profile-box:hover .search-container-wrapper {
+        background-color: rgba(255,255,255,0.12);
+        border-color: rgba(255,255,255,0.3);
+        box-shadow: 0 0 8px rgba(255,255,255,0.2);
+    }
+
+    /* Focus effect for inner search box */
+    .search-profile-box.focused .search-container-wrapper {
+        background-color: rgba(255,255,255,0.15);
+        border-color: rgba(255,255,255,0.4);
+        box-shadow: 0 0 15px rgba(255,255,255,0.3);
+    }
+
+    /* Search container */
+    .search-container {
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .search-icon {
+        color: #fff;
+        font-size: 20px;
+        padding-right: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .search-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        outline: none;
+        padding: 0;
+        width: 100%;
+    }
+
+    .search-input::placeholder {
+        color: rgba(255,255,255,0.6);
+    }
+
+    /* Search icon animation on hover */
+    .search-profile-box:hover .search-icon {
+        color: rgba(255,255,255,0.9);
+        transform: scale(1.1);
+    }
+
+    /* Search icon animation on focus */
+    .search-profile-box.focused .search-icon {
+        color: #ffffff;
+        transform: scale(1.2);
+        text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    }
+
+    /* Placeholder color change on focus */
+    .search-profile-box.focused .search-input::placeholder {
+        color: rgba(255,255,255,0.9);
+    }
+
+    /* Right side: Profile section - INSIDE THE SAME BOX */
+    .profile-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding-left: 20px;
+        border-left: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Profile image box */
+    .profile-image-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid rgba(255,255,255,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .profile-image-box:hover {
+        border-color: rgba(255,255,255,0.7);
+        transform: scale(1.05);
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* Profile text */
+    .profile-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .profile-name {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .profile-role {
+        color: rgba(255,255,255,0.8);
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    /* Info boxes wrapper - NOW IN NORMAL FLOW */
+    .info-boxes-wrapper {
+        position: relative; /* Changed from fixed */
+        width: 1000px;
+        margin: 0 auto 50px auto; /* Centered with margin */
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        z-index: 100;
+        align-items: stretch; /* Makes all boxes same height */
+    }
+
+    /* Individual info box - UPDATED FOR COMPACT HEIGHT */
+    .info-box {
+        flex: 1;
+        background-color: rgba(255,255,255,0.1);
+        box-shadow: 0 0 6px rgba(255,255,255,0.2);
+        border-radius: 5px;
+        padding: 15px; /* Reduced from 25px */
+        transition: all 0.3s ease;
+        border-left: 1px solid transparent;
+        backdrop-filter: blur(5px);
+        min-height: 200px; /* Reduced from 280px */
+        display: flex;
+        flex-direction: column;
+        border-top: 3px solid rgba(46, 204, 113, 0.7);
+    }
+
+    /* Hover effect for individual info boxes */
+    .info-box:hover {
+        border-left: 1px solid #fff;
+        box-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+        background-color: rgba(255,255,255,0.15);
+        transform: translateY(-5px);
+    }
+
+    /* Second box has different border color */
+    .info-box:nth-child(2) {
+        border-top: 3px solid rgba(155, 89, 182, 0.7);
+    }
+
+    /* Sequence boxes container - NOW IN NORMAL FLOW */
+    .sequence-container {
+        width: 1000px;
+        margin: 0 auto; /* Centered in main content */
+        z-index: 90;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 50px; /* Reduced margin since boxes are not fixed */
+        margin-bottom: 50px;
+    }
+
+    /* Sequence rows */
+    .sequence-row {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        width: 100%;
+    }
+
+    /* Sequence boxes - transparent design */
+    .sequence-box {
+        flex: 1;
+        max-width: 220px;
+        background-color: rgba(255,255,255,0.1);
+        box-shadow: 0 0 6px rgba(255,255,255,0.2);
+        border-radius: 5px;
+        padding: 25px 20px;
+        transition: all 0.3s ease;
+        border-left: 1px solid transparent;
+        backdrop-filter: blur(5px);
+        text-align: center;
+        color: #fff;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 220px;
+    }
+
+    /* Hover effect for sequence boxes */
+    .sequence-box:hover {
+        border-left: 1px solid #fff;
+        box-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+        background-color: rgba(255,255,255,0.15);
+        transform: translateY(-5px);
+    }
+
+    /* Sequence box icon - UPDATED FOR FONT AWESOME */
+    .sequence-icon {
+        font-size: 28px;
+        margin-bottom: 20px;
+        display: block;
+        height: 60px;
+        width: 60px;
+        line-height: 60px;
+        border-radius: 8px;
+        background-color: rgba(255,255,255,0.1);
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Sequence icon hover effect */
+    .sequence-icon i {
+        transition: all 0.3s ease;
+    }
+
+    .sequence-box:hover .sequence-icon i {
+        transform: scale(1.1);
+        color: rgba(255,255,255,1);
+    }
+
+    .sequence-box:hover .sequence-icon {
+        background-color: rgba(255,255,255,0.15);
+    }
+
+    /* Sequence box title */
+    .sequence-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.9);
+        text-align: center;
+        margin-top: 15px; /* Reduced from 20px */
+        margin-bottom: 10px;
+    }
+
+    /* Sequence box number */
+    .sequence-number {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.8);
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.8rem;
+    }
+
+    /* Checkbox circle below icon */
+    .checkbox-circle-container {
+        position: relative;
+        margin: 5px 0;
+        height: 28px;
+        width: 28px;
+    }
+
+    .checkbox-circle {
+        display: none;
+    }
+
+    .checkbox-circle + label {
+        display: block;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background-color: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .checkbox-circle:checked + label {
+        background-color: rgba(75, 255, 100, 0.3);
+        border-color: rgba(75, 255, 100, 0.7);
+        box-shadow: 0 0 10px rgba(75, 255, 100, 0.5);
+    }
+
+    .checkbox-circle:checked + label:after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .checkbox-circle + label:hover {
+        border-color: rgba(255,255,255,0.6);
+        background-color: rgba(255,255,255,0.2);
+        transform: scale(1.1);
+    }
+
+    /* Credit Card Container */
+    .credit-card-container {
+        width: 1000px;
+        margin: 0 auto;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    /* Credit Card Section - UPDATED: CARD AND DETAILS IN ONE BOX */
+    .credit-card-section {
+        background-color: rgba(255,255,255,0.1);
+        box-shadow: 0 0 6px rgba(255,255,255,0.2);
+        border-radius: 10px;
+        padding: 30px;
+        transition: all 0.3s ease;
+        border-left: 1px solid transparent;
+        backdrop-filter: blur(5px);
+        border-top: 3px solid rgba(255, 193, 7, 0.7);
+    }
+
+    .credit-card-section:hover {
+        border-left: 1px solid #fff;
+        box-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+        background-color: rgba(255,255,255,0.15);
+        transform: translateY(-5px);
+    }
+
+    /* Credit Card Header */
+    .credit-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .credit-card-title {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .credit-card-title i {
+        color: rgba(255, 193, 7, 0.9);
+        font-size: 28px;
+    }
+
+    /* Credit Card Body - UPDATED: CARD AND DETAILS SIDE BY SIDE IN ONE BOX */
+    .credit-card-body {
+        display: flex;
+        gap: 30px;
+    }
+
+    /* Card Display - Left Side - FIXED HEIGHT - CHIP REMOVED */
+    .card-display {
+        flex: 1;
+        background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+        border-radius: 15px;
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        height: 200px; /* Fixed height like before */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Centered content since chip is removed */
+    }
+
+    .card-display:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(100px, -100px);
+    }
+
+    .card-number {
+        color: #fff;
+        font-size: 28px;
+        font-weight: 500;
+        letter-spacing: 3px;
+        margin-bottom: 30px; /* Increased margin for better spacing */
+        font-family: 'Courier New', monospace;
+        text-align: center;
+    }
+
+    .card-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .card-holder {
+        color: rgba(255,255,255,0.9);
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .card-expiry {
+        color: rgba(255,255,255,0.9);
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    /* Card Details Box - Right Side - UPDATED: BETTER HEIGHT AND LAYOUT */
+    .card-details-box {
+        flex: 1;
+        background-color: rgba(255,255,255,0.08);
+        border-radius: 10px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgba(255,255,255,0.1);
+        height: 200px; /* Same height as card */
+    }
+
+    .card-details-box:hover {
+        background-color: rgba(255,255,255,0.12);
+    }
+
+    .card-details-title {
+        color: rgba(255,255,255,0.9);
+        font-size: 18px; /* Slightly reduced */
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .card-details-list {
+        list-style: none;
+        margin-bottom: 20px; /* Adjusted for better spacing */
+        flex-grow: 1; /* Takes available space */
+    }
+
+    .card-details-item {
+        margin-bottom: 12px; /* Slightly increased */
+        padding-bottom: 8px; /* Adjusted */
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-details-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: rgba(255,255,255,0.7);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 0; /* Removed bottom margin */
+        display: block;
+    }
+
+    .detail-value {
+        color: #fff;
+        font-size: 16px; /* Slightly reduced */
+        font-weight: 600;
+    }
+
+    .detail-value.free {
+        color: #4CAF50;
+    }
+
+    .detail-value.expiring {
+        color: #FF9800;
+    }
+
+    /* Card Buttons - ADJUSTED TO FIT INSIDE BOX BETTER */
+    .card-buttons {
+        display: flex;
+        gap: 8px; /* Reduced gap */
+        margin-top: auto; /* Pushes buttons to bottom */
+        flex-wrap: nowrap; /* Prevent wrapping */
+    }
+
+    .card-btn {
+        padding: 6px 10px; /* Reduced padding */
+        border-radius: 5px;
+        border: none;
+        font-size: 12px; /* Reduced font size */
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 110px; /* Reduced min-width */
+        text-align: center;
+        background-color: rgba(255,255,255,0.1);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.2);
+        flex: 1; /* Makes buttons equal width */
+    }
+
+    .card-btn i {
+        margin-right: 5px;
+        font-size: 12px;
+    }
+
+    .card-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .show-details-btn:hover {
+        background-color: rgba(33, 150, 243, 0.3);
+        border-color: rgba(33, 150, 243, 0.5);
+    }
+
+    .hide-details-btn:hover {
+        background-color: rgba(244, 67, 54, 0.3);
+        border-color: rgba(244, 67, 54, 0.5);
+    }
+
+    .upgrade-card-btn:hover {
+        background-color: rgba(255, 193, 7, 0.3);
+        border-color: rgba(255, 193, 7, 0.5);
+    }
+
+    /* Wallet icon - और छोटा */
+    .wallet-icon {
+        color: #fff;
+        font-size: 22px; /* Reduced from 24px */
+        background: rgba(255,255,255,0.1);
+        padding: 8px; /* Reduced from 10px */
+        border-radius: 8px;
+        width: 45px; /* Reduced from 50px */
+        height: 45px; /* Reduced from 50px */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px; /* Reduced from 15px */
+    }
+
+    /* Info box title - छोटा */
+    .info-box-title {
+        color: rgba(255,255,255,0.9);
+        font-size: 16px; /* Reduced from 18px */
+        font-weight: 500;
+        margin-bottom: 8px; /* Reduced from 10px */
+        text-align: left;
+    }
+
+    /* Dollar amount - और छोटा */
+    .dollar-amount {
+        color: #fff;
+        font-size: 24px; /* Reduced from 28px */
+        font-weight: 700;
+        margin-bottom: 10px; /* Reduced from 15px */
+        text-align: left;
+    }
+
+    /* Account number section with copy button - और कॉम्पैक्ट */
+    .account-number-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px; /* Reduced from 20px */
+        gap: 8px; /* Reduced from 10px */
+    }
+
+    .account-number {
+        color: #fff;
+        font-size: 16px; /* Reduced from 18px */
+        font-weight: 600;
+        text-align: left;
+        letter-spacing: 0.5px; /* Reduced from 1px */
+        padding: 5px 0; /* Reduced from 6px */
+    }
+
+    /* Copy button - और छोटा */
+    .copy-btn {
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color: #fff;
+        font-size: 14px; /* Reduced from 16px */
+        padding: 5px; /* Reduced from 6px */
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px; /* Reduced from 36px */
+        height: 32px; /* Reduced from 36px */
+    }
+
+    .copy-btn:hover {
+        background: rgba(255,255,255,0.2);
+        transform: scale(1.1);
+    }
+
+    /* Buttons container - और कॉम्पैक्ट */
+    .buttons-container {
+        display: flex;
+        gap: 12px; /* Reduced from 15px */
+        margin-top: 15px; /* Reduced from 20px */
+    }
+
+    /* Button styles - और छोटा */
+    .btn {
+        padding: 8px 15px; /* Reduced from 10px 20px */
+        border-radius: 5px;
+        border: none;
+        font-size: 14px; /* Reduced from 15px */
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 100px; /* Reduced from 110px */
+        text-align: center;
+    }
+
+    .withdraw-btn {
+        background-color: rgba(255, 75, 75, 0.2);
+        color: #ff9f9f;
+        border: 1px solid rgba(255, 75, 75, 0.3);
+    }
+
+    .deposit-btn {
+        background-color: rgba(75, 255, 100, 0.2);
+        color: #9fffaf;
+        border: 1px solid rgba(75, 255, 100, 0.3);
+    }
+
+    .contact-btn {
+        background-color: rgba(100, 150, 255, 0.2);
+        color: #afc9ff;
+        border: 1px solid rgba(100, 150, 255, 0.3);
+        width: 100%;
+        margin-top: 10px; /* Reduced from 15px */
+        padding: 8px 15px; /* Reduced from 10px 20px */
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .withdraw-btn:hover {
+        background-color: rgba(255, 75, 75, 0.3);
+        color: #ff6b6b;
+        border-color: rgba(255, 75, 75, 0.5);
+    }
+
+    .deposit-btn:hover {
+        background-color: rgba(75, 255, 100, 0.3);
+        color: #6bff8b;
+        border-color: rgba(75, 255, 100, 0.5);
+    }
+
+    .contact-btn:hover {
+        background-color: rgba(100, 150, 255, 0.3);
+        color: #8fb4ff;
+        border-color: rgba(100, 150, 255, 0.5);
+    }
+
+    /* Help description - और छोटा */
+    .help-description {
+        color: rgba(255,255,255,0.8);
+        font-size: 14px; /* Reduced from 15px */
+        line-height: 1.5; /* Reduced from 1.6 */
+        text-align: left;
+        margin-top: 8px; /* Reduced from 10px */
+        margin-bottom: 15px; /* Reduced from 20px */
+        flex-grow: 1;
+    }
+
+    /* Need Help box specific adjustments */
+    .info-box:nth-child(2) {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .info-box:nth-child(2) .info-box-title {
+        margin-bottom: 8px; /* Reduced from 10px */
+        font-size: 18px; /* Reduced from 20px */
+    }
+
+    .info-box:nth-child(2) .help-description {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .main-box .sidebar-menu {
+        position: fixed;
+        height: 100vh;
+        width: 280px;
+        background-color: rgba(255,255,255,0.1);
+        box-shadow: 0 0 6px rgba(255,255,255,0.2);
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .sidebar-menu .logo {
+        position: absolute;
+        height: 60px;
+        width: 100%;
+        box-shadow: 0 0 6px rgba(255,255,255,0.3);
+    }
+
+    .sidebar-menu .logo a {
+        position: absolute;
+        color: #fff;
+        font-size: 25px;
+        font-weight: 500;
+        text-decoration: none;
+        line-height: 60px;
+        left: 50px;
+    }
+
+    .sidebar-menu .menu {
+        position: absolute;
+        top: 80px;
+        width: 100%;
+    }
+
+    .sidebar-menu .menu li {
+        margin-top: 6px;
+        padding: 14px 20px;
+        transition: all 0.2s linear;
+    }
+
+    .sidebar-menu .menu i {
+        color: #fff;
+        font-size: 20px;
+        padding-right: 8px;
+    }
+
+    .sidebar-menu .menu a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+    .sidebar-menu .menu li:hover {
+        border-left: 1px solid #fff;
+        box-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+    }
+
+    .profile-box {
+        position: fixed;
+        left: 0px;
+        bottom: 20px;
+    }
+
+    .profile-box a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px;
+        background: transparent;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 14px;
+        transition: 0.3s ease;
+    }
+
+    .profile-box a i {
+        font-size: 30px;
+    }
+
+    .profile-box a span {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .profile-box a:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    }
+
+    /* Copy notification */
+    .copy-notification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 5px;
+        font-size: 16px;
+        z-index: 1000;
+        display: none;
+        transition: all 0.3s ease;
+    }
+
+    /* Different colored borders for sequence boxes */
+    .sequence-box:nth-child(1) {
+        border-top: 3px solid rgba(52, 152, 219, 0.7);
+    }
+    
+    .sequence-box:nth-child(2) {
+        border-top: 3px solid rgba(46, 204, 113, 0.7);
+    }
+    
+    .sequence-box:nth-child(3) {
+        border-top: 3px solid rgba(231, 76, 60, 0.7);
+    }
+    
+    .sequence-box:nth-child(4) {
+        border-top: 3px solid rgba(243, 156, 18, 0.7);
+    }
+
+    /* RECENT WITHDRAW SECTION - ADDED WITH DATA */
+    .recent-withdraw-container {
+        width: 1000px;
+        margin: 0 auto;
+        margin-top: 50px;
+        margin-bottom: 100px;
+    }
+
+    .recent-withdraw-section {
+        background-color: rgba(255,255,255,0.1);
+        box-shadow: 0 0 6px rgba(255,255,255,0.2);
+        border-radius: 10px;
+        padding: 30px;
+        transition: all 0.3s ease;
+        border-left: 1px solid transparent;
+        backdrop-filter: blur(5px);
+        border-top: 3px solid rgba(52, 152, 219, 0.7);
+    }
+
+    .recent-withdraw-section:hover {
+        border-left: 1px solid #fff;
+        box-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+        background-color: rgba(255,255,255,0.15);
+        transform: translateY(-5px);
+    }
+
+    .recent-withdraw-header {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .recent-withdraw-title {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .recent-withdraw-title i {
+        color: rgba(52, 152, 219, 0.9);
+        font-size: 28px;
+    }
+
+    /* Table Header */
+    .recent-withdraw-table-header {
+        display: grid;
+        grid-template-columns: 1fr 2fr 2fr 1fr;
+        background-color: rgba(255,255,255,0.08);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.9);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .recent-header-cell {
+        padding: 8px 0;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .recent-transaction-history {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+
+    .recent-amount-cell {
+        text-align: right;
+        position: relative;
+        padding-right: 20px;
+    }
+
+    .recent-status-subheader {
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.7);
+        text-transform: none;
+        letter-spacing: 0;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        margin-top: 4px;
+        width: 100%;
+        text-align: right;
+        padding-right: 20px;
+    }
+
+    .recent-transaction-link {
+        color: rgba(52, 152, 219, 0.9);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    .recent-transaction-link:hover {
+        color: rgba(52, 152, 219, 1);
+        text-decoration: underline;
+    }
+
+    .recent-arrow {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    /* Table Body with Data Rows */
+    .recent-table-body {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .recent-table-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr 2fr 1fr;
+        background-color: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        padding: 16px 20px;
+        align-items: center;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .recent-table-row:hover {
+        background-color: rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.1);
+        transform: translateY(-2px);
+    }
+
+    .recent-table-cell {
+        padding: 8px 0;
+        color: rgba(255,255,255,0.9);
+        font-size: 15px;
+    }
+
+    .recent-amount-data {
+        text-align: right;
+        font-weight: 600;
+        color: #fff;
+        position: relative;
+        padding-right: 20px;
+    }
+
+    .recent-status {
+        font-size: 12px;
+        font-weight: 500;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        margin-top: 4px;
+        width: 100%;
+        text-align: right;
+        padding-right: 20px;
+    }
+
+    .status-completed {
+        color: #4CAF50;
+    }
+
+    .status-pending {
+        color: #FF9800;
+    }
+
+    .status-failed {
+        color: #F44336;
+    }
+
+    .view-details-btn {
+        background: transparent;
+        border: 1px solid rgba(52, 152, 219, 0.5);
+        color: rgba(52, 152, 219, 0.9);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .view-details-btn:hover {
+        background-color: rgba(52, 152, 219, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .top-header,
+        .info-boxes-wrapper, .sequence-container, .credit-card-container, .recent-withdraw-container {
+            width: 800px;
+        }
+        
+        .search-profile-box {
+            max-width: 800px;
+        }
+        
+        .sequence-box {
+            max-width: 180px;
+            padding: 20px 15px;
+        }
+        
+        .card-number {
+            font-size: 24px;
+        }
+        
+        .card-btn {
+            min-width: 100px;
+            font-size: 11px;
+        }
+        
+        .recent-withdraw-table-header {
+            grid-template-columns: 1fr 1.5fr 2fr 1fr;
+        }
+        
+        .recent-table-row {
+            grid-template-columns: 1fr 1.5fr 2fr 1fr;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .top-header,
+        .info-boxes-wrapper, .sequence-container, .credit-card-container, .recent-withdraw-container {
+            width: 90%;
+        }
+        
+        .search-profile-box {
+            flex-direction: column;
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        .profile-section {
+            border-left: none;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-left: 0;
+            padding-top: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .search-section {
+            width: 100%;
+        }
+        
+        .search-container-wrapper {
+            max-width: 100%;
+        }
+        
+        .sequence-row {
+            flex-wrap: wrap;
+        }
+        
+        .sequence-box {
+            max-width: 45%;
+            min-width: 200px;
+        }
+        
+        /* Side by side layout for mobile */
+        .credit-card-body {
+            flex-direction: column;
+        }
+        
+        .card-display, .card-details-box {
+            height: auto; /* Auto height on mobile */
+            min-height: 180px;
+        }
+        
+        .card-buttons {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .card-btn {
+            min-width: 120px;
+            flex: none;
+        }
+        
+        .recent-withdraw-table-header {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 10px;
+        }
+        
+        .recent-table-row {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 10px;
+            padding: 12px 15px;
+        }
+        
+        .recent-header-cell:nth-child(3),
+        .recent-header-cell:nth-child(4) {
+            grid-column: span 1;
+        }
+        
+        .recent-amount-cell {
+            text-align: left;
+            padding-right: 0;
+        }
+        
+        .recent-status-subheader {
+            text-align: left;
+            position: static;
+            margin-top: 2px;
+            padding-right: 0;
+        }
+        
+        .recent-transaction-history {
+            justify-content: flex-start;
+        }
+        
+        .recent-amount-data {
+            text-align: left;
+            padding-right: 0;
+        }
+        
+        .recent-status {
+            position: static;
+            text-align: left;
+            padding-right: 0;
+            margin-top: 2px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+            padding-top: 20px;
+        }
+        
+        .top-header {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .info-boxes-wrapper {
+            flex-direction: column;
+        }
+        
+        .sidebar-menu {
+            width: 60px;
+        }
+        
+        .sidebar-menu .logo a {
+            left: 15px;
+            font-size: 0;
+        }
+        
+        .sidebar-menu .logo a:after {
+            content: "UP";
+            font-size: 20px;
+        }
+        
+        .sidebar-menu .menu a span {
+            display: none;
+        }
+        
+        .sidebar-menu .menu i {
+            padding-right: 0;
+            font-size: 24px;
+        }
+        
+        .profile-box a span {
+            display: none;
+        }
+        
+        .card-number {
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+        
+        .card-btn {
+            min-width: 100%;
+            margin-bottom: 8px;
+        }
+        
+        .recent-withdraw-table-header {
+            padding: 12px 15px;
+        }
+        
+        .recent-table-row {
+            padding: 10px 12px;
+        }
+    }
+</style>
+<body>
+
+    <div class="main-box">
+        <div class="sidebar-menu">
+            <div class="logo">
+                <a href="#">UberPay</a>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>Transactions</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                            <span>Transfer Money</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-credit-card"></i>
+                            <span>Payment Method</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-wallet"></i>
+                            <span>Deposit</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                            <span>Withdrawal</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-arrow-up-right-dots"></i>
+                            <span>Upgrade Card</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="profile-box">
+                <a href="#">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA - EVERYTHING SCROLLS NOW -->
+        <div class="main-content">
+            <!-- TOP HEADER WITH SEARCH AND PROFILE IN ONE BOX -->
+            <div class="top-header">
+                <!-- UPDATED: Single box containing both search and profile -->
+                <div class="search-profile-box" id="searchWrapper">
+                    <!-- Left side: Search section -->
+                    <div class="search-section">
+                        <div class="search-container-wrapper">
+                            <div class="search-container">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" class="search-input" placeholder="Search transactions, cards, or settings..." id="searchInput">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right side: Profile section - INSIDE THE SAME BOX -->
+                    <div class="profile-section">
+                        <div class="profile-image-box">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Profile" class="profile-image">
+                        </div>
+                        <div class="profile-text">
+                            <div class="profile-name">Alex Johnson</div>
+                            <div class="profile-role">Premium Member</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info boxes wrapper - NOW IN NORMAL FLOW -->
+            <div class="info-boxes-wrapper">
+                <!-- Box 1: Availability Balance - MORE COMPACT -->
+                <div class="info-box">
+                    <div class="wallet-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="info-box-title">Availability Balance</div>
+                    <div class="dollar-amount">$0</div>
+                    
+                    <!-- Account number with copy button -->
+                    <div class="account-number-section">
+                        <div class="account-number">4572 5756 13</div>
+                        <button class="copy-btn" id="copyBtn">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="buttons-container">
+                        <button class="btn withdraw-btn">Withdraw</button>
+                        <button class="btn deposit-btn">Deposit</button>
+                    </div>
+                </div>
+
+                <!-- Box 2: Need Help - MORE COMPACT -->
+                <div class="info-box">
+                    <div class="info-box-title">Need Help?</div>
+                    <div class="help-description">
+                        Have questions about your account?<br>
+                        Our experts are here to help.
+                    </div>
+                    <button class="btn contact-btn">Contact Us</button>
+                </div>
+            </div>
+
+            <!-- Sequence boxes container - UPDATED WITH REAL ICONS -->
+            <div class="sequence-container">
+                <!-- Single row with ONLY 4 boxes -->
+                <div class="sequence-row" id="firstRow">
+                    <!-- Box 1: Debit Card Applied -->
+                    <div class="sequence-box">
+                        <div class="sequence-number">1</div>
+                        <div class="sequence-icon">
+                            <i class="fa-solid fa-credit-card"></i>
+                        </div>
+                        <!-- Checkbox in circle -->
+                        <div class="checkbox-circle-container">
+                            <input type="checkbox" id="box1" class="checkbox-circle">
+                            <label for="box1"></label>
+                        </div>
+                        <div class="sequence-title">Debit Card Applied</div>
+                    </div>
+                    
+                    <!-- Box 2: Email Verified -->
+                    <div class="sequence-box">
+                        <div class="sequence-number">2</div>
+                        <div class="sequence-icon">
+                            <i class="fa-solid fa-envelope-circle-check"></i>
+                        </div>
+                        <!-- Checkbox in circle -->
+                        <div class="checkbox-circle-container">
+                            <input type="checkbox" id="box2" class="checkbox-circle" checked>
+                            <label for="box2"></label>
+                        </div>
+                        <div class="sequence-title">Email Verified</div>
+                    </div>
+                    
+                    <!-- Box 3: Add Deposit Method -->
+                    <div class="sequence-box">
+                        <div class="sequence-number">3</div>
+                        <div class="sequence-icon">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                        </div>
+                        <!-- Checkbox in circle -->
+                        <div class="checkbox-circle-container">
+                            <input type="checkbox" id="box3" class="checkbox-circle">
+                            <label for="box3"></label>
+                        </div>
+                        <div class="sequence-title">Add Deposit Method</div>
+                    </div>
+                    
+                    <!-- Box 4: Add Withdraw Method -->
+                    <div class="sequence-box">
+                        <div class="sequence-number">4</div>
+                        <div class="sequence-icon">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </div>
+                        <!-- Checkbox in circle -->
+                        <div class="checkbox-circle-container">
+                            <input type="checkbox" id="box4" class="checkbox-circle">
+                            <label for="box4"></label>
+                        </div>
+                        <div class="sequence-title">Add Withdraw Method</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credit Card Section - CARD AND DETAILS IN ONE BOX WITH CHIP REMOVED -->
+            <div class="credit-card-container">
+                <div class="credit-card-section">
+                    <div class="credit-card-header">
+                        <div class="credit-card-title">
+                            <i class="fa-solid fa-credit-card"></i>
+                            Cart Pay Debit Card
+                        </div>
+                    </div>
+                    
+                    <div class="credit-card-body">
+                        <!-- Card Display - Left Side WITHOUT CHIP -->
+                        <div class="card-display">
+                            <div class="card-number">XXXX XXXX XXXX 3023</div>
+                            <div class="card-bottom">
+                                <div class="card-holder">ABSOL HAD</div>
+                                <div class="card-expiry">01/30</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Details Box - Right Side WITH ADJUSTED BUTTONS -->
+                        <div class="card-details-box">
+                            <div class="card-details-title">Cart Pay Debit Card Details</div>
+                            <ul class="card-details-list">
+                                <li class="card-details-item">
+                                    <span class="detail-label">Active Subscription</span>
+                                    <span class="detail-value free">Free</span>
+                                </li>
+                                <li class="card-details-item">
+                                    <span class="detail-label">Expiry Date</span>
+                                    <span class="detail-value expiring">16-10-2025</span>
+                                </li>
+                            </ul>
+                            
+                            <!-- Card Buttons - NOW PROPERLY ADJUSTED INSIDE CARD DETAILS BOX -->
+                            <div class="card-buttons">
+                                <button class="card-btn show-details-btn" id="showDetailsBtn">
+                                    <i class="fa-solid fa-eye"></i> Show Details
+                                </button>
+                                <button class="card-btn hide-details-btn" id="hideDetailsBtn">
+                                    <i class="fa-solid fa-eye-slash"></i> Hide Details
+                                </button>
+                                <button class="card-btn upgrade-card-btn" id="upgradeCardBtn">
+                                    <i class="fa-solid fa-arrow-up"></i> Upgrade
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECENT WITHDRAW SECTION - ADDED WITH DATA -->
+            <div class="recent-withdraw-container">
+                <div class="recent-withdraw-section">
+                    <div class="recent-withdraw-header">
+                        <h2 class="recent-withdraw-title">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                            Recent Withdraw
+                        </h2>
+                    </div>
+                    
+                    <div class="recent-withdraw-table-header">
+                        <div class="recent-header-cell">Date</div>
+                        <div class="recent-header-cell">Description</div>
+                        <div class="recent-header-cell recent-transaction-history">
+                            <a href="#" class="recent-transaction-link" id="recentTransactionLink">
+                                Transaction History
+                                <span class="recent-arrow">></span>
+                            </a>
+                        </div>
+                        <div class="recent-header-cell recent-amount-cell">
+                            Amount
+                            <span class="recent-status-subheader">Status</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Table Body with Data Rows -->
+                    <div class="recent-table-body">
+                        <!-- Row 1 -->
+                        <div class="recent-table-row">
+                            <div class="recent-table-cell">15-10-2024</div>
+                            <div class="recent-table-cell">Bank Transfer to HDFC Bank</div>
+                            <div class="recent-table-cell">
+                                <button class="view-details-btn">
+                                    <i class="fa-solid fa-eye"></i> View Details
+                                </button>
+                            </div>
+                            <div class="recent-table-cell recent-amount-data">
+                                $500.00
+                                <span class="recent-status status-completed">Completed</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Row 2 -->
+                        <div class="recent-table-row">
+                            <div class="recent-table-cell">10-10-2024</div>
+                            <div class="recent-table-cell">Withdrawal to ICICI Bank</div>
+                            <div class="recent-table-cell">
+                                <button class="view-details-btn">
+                                    <i class="fa-solid fa-eye"></i> View Details
+                                </button>
+                            </div>
+                            <div class="recent-table-cell recent-amount-data">
+                                $250.00
+                                <span class="recent-status status-pending">Pending</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Row 3 -->
+                        <div class="recent-table-row">
+                            <div class="recent-table-cell">05-10-2024</div>
+                            <div class="recent-table-cell">Cash Withdrawal via ATM</div>
+                            <div class="recent-table-cell">
+                                <button class="view-details-btn">
+                                    <i class="fa-solid fa-eye"></i> View Details
+                                </button>
+                            </div>
+                            <div class="recent-table-cell recent-amount-data">
+                                $100.00
+                                <span class="recent-status status-completed">Completed</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Row 4 -->
+                        <div class="recent-table-row">
+                            <div class="recent-table-cell">01-10-2024</div>
+                            <div class="recent-table-cell">UPI Transfer to Phone Number</div>
+                            <div class="recent-table-cell">
+                                <button class="view-details-btn">
+                                    <i class="fa-solid fa-eye"></i> View Details
+                                </button>
+                            </div>
+                            <div class="recent-table-cell recent-amount-data">
+                                $750.00
+                                <span class="recent-status status-failed">Failed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copy notification -->
+    <div class="copy-notification" id="copyNotification">
+        Account number copied to clipboard!
+    </div>
+
+    <!-- Card Details Modal -->
+    <div class="copy-notification" id="cardDetailsNotification" style="width: 300px; text-align: center;">
+        Full card details would be shown here securely
+    </div>
+
+    <!-- Recent Withdraw Notification -->
+    <div class="copy-notification" id="recentWithdrawNotification" style="width: 350px; text-align: center;">
+        Transaction history would be shown here
+    </div>
+
+    <script>
+        // Get elements
+        const searchWrapper = document.getElementById('searchWrapper');
+        const searchInput = document.getElementById('searchInput');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyNotification = document.getElementById('copyNotification');
+        const cardDetailsNotification = document.getElementById('cardDetailsNotification');
+        const showDetailsBtn = document.getElementById('showDetailsBtn');
+        const hideDetailsBtn = document.getElementById('hideDetailsBtn');
+        const upgradeCardBtn = document.getElementById('upgradeCardBtn');
+        const recentTransactionLink = document.getElementById('recentTransactionLink');
+        const recentWithdrawNotification = document.getElementById('recentWithdrawNotification');
+        
+        // Add click/focus effect to search
+        searchInput.addEventListener('focus', function() {
+            searchWrapper.classList.add('focused');
+        });
+        
+        // Remove effect when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchWrapper.contains(event.target)) {
+                searchWrapper.classList.remove('focused');
+            }
+        });
+        
+        // Copy account number functionality
+        copyBtn.addEventListener('click', function() {
+            const accountNumber = '4572575613';
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(accountNumber).then(function() {
+                // Show notification
+                copyNotification.style.display = 'block';
+                
+                // Hide notification after 2 seconds
+                setTimeout(function() {
+                    copyNotification.style.display = 'none';
+                }, 2000);
+                
+                // Button animation
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                this.style.background = 'rgba(75, 255, 100, 0.3)';
+                
+                // Reset button after 1.5 seconds
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-copy"></i>';
+                    this.style.background = 'rgba(255,255,255,0.1)';
+                }, 1500);
+                
+            }).catch(function(err) {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy account number');
+            });
+        });
+
+        // Add click effects to buttons
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Add a temporary click effect
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                // Example action based on button type
+                if (this.classList.contains('withdraw-btn')) {
+                    alert('Withdraw functionality would open here');
+                } else if (this.classList.contains('deposit-btn')) {
+                    alert('Deposit functionality would open here');
+                } else if (this.classList.contains('contact-btn')) {
+                    alert('Contact support form would open here');
+                }
+            });
+        });
+
+        // Add hover effects to sequence boxes
+        const sequenceBoxes = document.querySelectorAll('.sequence-box');
+        sequenceBoxes.forEach(box => {
+            box.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            box.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+            
+            // Add click effect to sequence boxes
+            box.addEventListener('click', function(e) {
+                // Don't trigger if clicking on checkbox
+                if (!e.target.classList.contains('checkbox-circle') && !e.target.closest('.checkbox-circle-container')) {
+                    const title = this.querySelector('.sequence-title').textContent;
+                    const number = this.querySelector('.sequence-number').textContent;
+                    alert(`Clicked: ${title} (Step ${number})`);
+                    
+                    // Add a temporary click effect
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-5px)';
+                    }, 150);
+                }
+            });
+        });
+
+        // Add functionality to checkboxes
+        const checkboxes = document.querySelectorAll('.checkbox-circle');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const boxNumber = this.id.replace('box', '');
+                const boxTitle = document.querySelector(`#${this.id}`).closest('.sequence-box').querySelector('.sequence-title').textContent;
+                
+                if (this.checked) {
+                    console.log(`Step ${boxNumber} (${boxTitle}) marked as completed`);
+                    // You can add visual feedback here
+                    this.closest('.sequence-box').style.borderTop = '3px solid rgba(75, 255, 100, 0.7)';
+                } else {
+                    console.log(`Step ${boxNumber} (${boxTitle}) marked as incomplete`);
+                    // Reset border color based on box number
+                    const colors = [
+                        'rgba(52, 152, 219, 0.7)',
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(231, 76, 60, 0.7)',
+                        'rgba(243, 156, 18, 0.7)'
+                    ];
+                    const index = parseInt(boxNumber) - 1;
+                    this.closest('.sequence-box').style.borderTop = `3px solid ${colors[index]}`;
+                }
+            });
+        });
+
+        // Credit Card Button Functionality
+        showDetailsBtn.addEventListener('click', function() {
+            // Show card details notification
+            cardDetailsNotification.innerHTML = '<strong>Full Card Details:</strong><br>Card Number: 4587 2541 3698 3023<br>CVV: 123<br>PIN: ****';
+            cardDetailsNotification.style.display = 'block';
+            
+            // Hide notification after 3 seconds
+            setTimeout(function() {
+                cardDetailsNotification.style.display = 'none';
+            }, 3000);
+            
+            // Button animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+
+        hideDetailsBtn.addEventListener('click', function() {
+            // Show notification that details are hidden
+            cardDetailsNotification.innerHTML = 'Card details are now hidden';
+            cardDetailsNotification.style.display = 'block';
+            
+            // Hide notification after 2 seconds
+            setTimeout(function() {
+                cardDetailsNotification.style.display = 'none';
+            }, 2000);
+            
+            // Button animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+
+        upgradeCardBtn.addEventListener('click', function() {
+            // Show upgrade notification
+            cardDetailsNotification.innerHTML = 'Redirecting to card upgrade options...';
+            cardDetailsNotification.style.display = 'block';
+            
+            // Hide notification after 2 seconds
+            setTimeout(function() {
+                cardDetailsNotification.style.display = 'none';
+                alert('Card upgrade page would open here');
+            }, 2000);
+            
+            // Button animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+
+        // Recent Withdraw Transaction History Link
+        recentTransactionLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show notification
+            recentWithdrawNotification.innerHTML = 'Transaction History would open here with all withdrawal records';
+            recentWithdrawNotification.style.display = 'block';
+            
+            // Hide notification after 3 seconds
+            setTimeout(function() {
+                recentWithdrawNotification.style.display = 'none';
+            }, 3000);
+            
+            // Link animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+            
+            console.log('Transaction History link clicked');
+        });
+
+        // Add hover effects to Recent Withdraw section
+        const recentWithdrawSection = document.querySelector('.recent-withdraw-section');
+        const recentTableBody = document.querySelector('.recent-table-body');
+        
+        if (recentWithdrawSection) {
+            recentWithdrawSection.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            recentWithdrawSection.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        }
+
+        // Add functionality to View Details buttons in Recent Withdraw table
+        const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
+        viewDetailsButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get the row data
+                const row = this.closest('.recent-table-row');
+                const date = row.querySelector('.recent-table-cell:nth-child(1)').textContent;
+                const description = row.querySelector('.recent-table-cell:nth-child(2)').textContent;
+                const amount = row.querySelector('.recent-amount-data').textContent.split('\n')[0];
+                const status = row.querySelector('.recent-status').textContent;
+                
+                // Show details in a notification
+                const notification = document.getElementById('recentWithdrawNotification');
+                notification.innerHTML = `
+                    <strong>Transaction Details:</strong><br>
+                    Date: ${date}<br>
+                    Description: ${description}<br>
+                    Amount: ${amount}<br>
+                    Status: ${status}<br>
+                    <small>Full transaction details would be shown here</small>
+                `;
+                notification.style.display = 'block';
+                
+                // Hide notification after 3 seconds
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 3000);
+                
+                // Button animation
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
