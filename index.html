@@ -849,12 +849,13 @@
         margin-top: -4px; /* Adjusted */
     }
 
-    /* Card Details Box - Right Side - UPDATED: BUTTONS NOW INSIDE BOX */
+    /* Card Details Box - Right Side - UPDATED: ALL BUTTONS INSIDE BOX */
     .card-details-box {
         flex: 1;
         background-color: rgba(255,255,255,0.08);
         border-radius: 10px;
-        padding: 20px; /* Reduced */
+        padding-bottom: 15px; /* Reduced */
+        margin-bottom: 15px;
         display: flex;
         flex-direction: column;
         border: 1px solid rgba(255,255,255,0.1);
@@ -882,8 +883,8 @@
     }
 
     .card-details-item {
-        margin-bottom: 10px; /* Reduced */
-        padding-bottom: 6px; /* Reduced */
+        margin-bottom: 4px; /* Reduced */
+        padding-bottom: 5px; /* Reduced */
         border-bottom: 1px solid rgba(255,255,255,0.05);
         display: flex;
         justify-content: space-between;
@@ -957,7 +958,7 @@
         color: #4CAF50;
     }
 
-    /* Card Buttons - NOW INSIDE THE CARD DETAILS BOX */
+    /* Card Buttons - NOW ALL INSIDE THE CARD DETAILS BOX */
     .card-buttons {
         display: flex;
         gap: 8px;
@@ -1304,7 +1305,7 @@
         border-top: 3px solid rgba(243, 156, 18, 0.7);
     }
 
-    /* RECENT WITHDRAW SECTION - ADDED WITH DATA */
+    /* RECENT WITHDRAW SECTION - UPDATED: STATUS CLOSER TO AMOUNT */
     .recent-withdraw-container {
         width: 1000px;
         margin: 0 auto;
@@ -1377,25 +1378,24 @@
         gap: 6px;
     }
 
+    /* UPDATED: Amount cell with status closer */
     .recent-amount-cell {
         text-align: right;
         position: relative;
-        padding-right: 20px;
+        padding-right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
     }
 
+    /* Status subheader - UPDATED */
     .recent-status-subheader {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 500;
         color: rgba(255,255,255,0.7);
-        text-transform: none;
-        letter-spacing: 0;
-        position: absolute;
-        right: 0;
-        top: 100%;
-        margin-top: 4px;
-        width: 100%;
-        text-align: right;
-        padding-right: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 2px;
     }
 
     .recent-transaction-link {
@@ -1418,7 +1418,7 @@
         font-weight: 700;
     }
 
-    /* Table Body with Data Rows */
+    /* Table Body with Data Rows - UPDATED */
     .recent-table-body {
         display: flex;
         flex-direction: column;
@@ -1448,24 +1448,28 @@
         font-size: 15px;
     }
 
+    /* UPDATED: Amount and status closer together */
     .recent-amount-data {
         text-align: right;
         font-weight: 600;
         color: #fff;
         position: relative;
-        padding-right: 20px;
+        padding-right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px; /* Reduced gap between amount and status */
     }
 
+    /* UPDATED: Status closer to amount */
     .recent-status {
         font-size: 12px;
         font-weight: 500;
-        position: absolute;
-        right: 0;
-        top: 100%;
-        margin-top: 4px;
-        width: 100%;
+        position: static; /* Changed from absolute */
         text-align: right;
-        padding-right: 20px;
+        margin-top: 0; /* Reduced from 4px */
+        padding-right: 0;
+        width: auto;
     }
 
     .status-completed {
@@ -1480,23 +1484,62 @@
         color: #F44336;
     }
 
+    /* VIEW DETAILS BUTTON - UPDATED WITH MODERN THEME */
     .view-details-btn {
-        background: transparent;
-        border: 1px solid rgba(52, 152, 219, 0.5);
-        color: rgba(52, 152, 219, 0.9);
-        padding: 4px 10px;
-        border-radius: 4px;
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.1));
+        border: 1px solid rgba(46, 204, 113, 0.4);
+        color: #2ecc71;
+        padding: 6px 14px;
+        border-radius: 6px;
         font-size: 12px;
         cursor: pointer;
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         gap: 4px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .view-details-btn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.2), transparent);
+        transition: all 0.5s ease;
     }
 
     .view-details-btn:hover {
-        background-color: rgba(52, 152, 219, 0.1);
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.3), rgba(39, 174, 96, 0.2));
+        color: #27ae60;
+        border-color: rgba(46, 204, 113, 0.6);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(46, 204, 113, 0.2);
+    }
+
+    .view-details-btn:hover:before {
+        left: 100%;
+    }
+
+    .view-details-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Icon styling in button */
+    .view-details-btn i {
+        font-size: 11px;
+        transition: transform 0.3s ease;
+    }
+
+    .view-details-btn:hover i {
+        transform: scale(1.1);
     }
 
     /* RESPONSIVE DESIGN FOR SMALLER CARD */
@@ -1639,13 +1682,11 @@
         .recent-amount-cell {
             text-align: left;
             padding-right: 0;
+            align-items: flex-start;
         }
         
         .recent-status-subheader {
             text-align: left;
-            position: static;
-            margin-top: 2px;
-            padding-right: 0;
         }
         
         .recent-transaction-history {
@@ -1655,13 +1696,11 @@
         .recent-amount-data {
             text-align: left;
             padding-right: 0;
+            align-items: flex-start;
         }
         
         .recent-status {
-            position: static;
             text-align: left;
-            padding-right: 0;
-            margin-top: 2px;
         }
     }
 
@@ -1780,6 +1819,14 @@
         .security-text {
             font-size: 8px;
             bottom: 15px;
+        }
+        
+        .recent-amount-data {
+            gap: 1px;
+        }
+        
+        .recent-status {
+            font-size: 11px;
         }
     }
 </style>
@@ -2065,7 +2112,7 @@
                             </div>
                         </div>
                         
-                        <!-- Card Details Box - Right Side WITH BUTTONS INSIDE -->
+                        <!-- Card Details Box - Right Side WITH ALL BUTTONS INSIDE -->
                         <div class="card-details-box">
                             <!-- Card Details Title -->
                             <div class="card-details-title">Visa Gold Card Details</div>
@@ -2114,7 +2161,7 @@
                                 </li>
                             </ul>
                             
-                            <!-- Card Buttons - NOW INSIDE THE CARD DETAILS BOX AT BOTTOM -->
+                            <!-- Card Buttons - NOW ALL INSIDE THE CARD DETAILS BOX AT BOTTOM -->
                             <div class="card-buttons">
                                 <button class="card-btn show-details-btn" id="showDetailsBtn">
                                     <i class="fa-solid fa-eye"></i> Show Details
@@ -2131,7 +2178,7 @@
                 </div>
             </div>
 
-            <!-- RECENT WITHDRAW SECTION - ADDED WITH DATA -->
+            <!-- RECENT WITHDRAW SECTION - UPDATED: STATUS CLOSER TO AMOUNT -->
             <div class="recent-withdraw-container">
                 <div class="recent-withdraw-section">
                     <div class="recent-withdraw-header">
@@ -2152,11 +2199,11 @@
                         </div>
                         <div class="recent-header-cell recent-amount-cell">
                             Amount
-                            <span class="recent-status-subheader">Status</span>
+                            <div class="recent-status-subheader">Status</div>
                         </div>
                     </div>
                     
-                    <!-- Table Body with Data Rows -->
+                    <!-- Table Body with Data Rows - UPDATED: AMOUNT AND STATUS CLOSER -->
                     <div class="recent-table-body">
                         <!-- Row 1 -->
                         <div class="recent-table-row">
@@ -2168,8 +2215,8 @@
                                 </button>
                             </div>
                             <div class="recent-table-cell recent-amount-data">
-                                $500.00
-                                <span class="recent-status status-completed">Completed</span>
+                                <div class="recent-amount">$500.00</div>
+                                <div class="recent-status status-completed">Completed</div>
                             </div>
                         </div>
                         
@@ -2183,8 +2230,8 @@
                                 </button>
                             </div>
                             <div class="recent-table-cell recent-amount-data">
-                                $250.00
-                                <span class="recent-status status-pending">Pending</span>
+                                <div class="recent-amount">$250.00</div>
+                                <div class="recent-status status-pending">Pending</div>
                             </div>
                         </div>
                         
@@ -2198,8 +2245,8 @@
                                 </button>
                             </div>
                             <div class="recent-table-cell recent-amount-data">
-                                $100.00
-                                <span class="recent-status status-completed">Completed</span>
+                                <div class="recent-amount">$100.00</div>
+                                <div class="recent-status status-completed">Completed</div>
                             </div>
                         </div>
                         
@@ -2213,8 +2260,8 @@
                                 </button>
                             </div>
                             <div class="recent-table-cell recent-amount-data">
-                                $750.00
-                                <span class="recent-status status-failed">Failed</span>
+                                <div class="recent-amount">$750.00</div>
+                                <div class="recent-status status-failed">Failed</div>
                             </div>
                         </div>
                     </div>
@@ -2635,7 +2682,7 @@
                 const row = this.closest('.recent-table-row');
                 const date = row.querySelector('.recent-table-cell:nth-child(1)').textContent;
                 const description = row.querySelector('.recent-table-cell:nth-child(2)').textContent;
-                const amount = row.querySelector('.recent-amount-data').textContent.split('\n')[0];
+                const amount = row.querySelector('.recent-amount').textContent;
                 const status = row.querySelector('.recent-status').textContent;
                 
                 // Show details in a notification
