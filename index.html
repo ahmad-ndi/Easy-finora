@@ -849,7 +849,7 @@
         margin-top: -4px; /* Adjusted */
     }
 
-    /* Card Details Box - Right Side - SMALLER */
+    /* Card Details Box - Right Side - UPDATED: BUTTONS NOW INSIDE BOX */
     .card-details-box {
         flex: 1;
         background-color: rgba(255,255,255,0.08);
@@ -859,6 +859,7 @@
         flex-direction: column;
         border: 1px solid rgba(255,255,255,0.1);
         height: 230px; /* Match card height */
+        justify-content: space-between; /* NEW: buttons को bottom पर लाने के लिए */
     }
 
     .card-details-box:hover {
@@ -877,7 +878,7 @@
     .card-details-list {
         list-style: none;
         margin-bottom: 15px; /* Reduced */
-        flex-grow: 1;
+        flex-grow: 1; /* NEW: list को expand होने दे */
     }
 
     .card-details-item {
@@ -907,21 +908,60 @@
         color: #fff;
         font-size: 15px; /* Reduced */
         font-weight: 600;
-    }
-
-    .detail-value.free {
-        color: #4CAF50;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .detail-value.expiring {
         color: #FF9800;
     }
 
-    /* Card Buttons - SMALLER */
+    /* NEW: Hidden value style */
+    .hidden-value {
+        letter-spacing: 2px;
+        font-family: 'Courier New', monospace;
+    }
+
+    /* NEW: Real value initially hidden */
+    .real-value {
+        display: none;
+        font-family: 'Courier New', monospace;
+    }
+
+    /* NEW: Copy button for card details */
+    .detail-copy-btn {
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color: #fff;
+        font-size: 14px;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+    }
+
+    .detail-copy-btn:hover {
+        background: rgba(255,255,255,0.2);
+        transform: scale(1.1);
+    }
+
+    .detail-copy-btn.copied {
+        background: rgba(75, 255, 100, 0.3);
+        color: #4CAF50;
+    }
+
+    /* Card Buttons - NOW INSIDE THE CARD DETAILS BOX */
     .card-buttons {
         display: flex;
         gap: 8px;
-        margin-top: auto;
+        margin-top: auto; /* NEW: buttons को bottom पर push करेगा */
         flex-wrap: nowrap;
     }
 
@@ -964,6 +1004,11 @@
     .upgrade-card-btn:hover {
         background-color: rgba(255, 193, 7, 0.3);
         border-color: rgba(255, 193, 7, 0.5);
+    }
+
+    /* Initially hide the Hide Details button */
+    .hide-details-btn {
+        display: none;
     }
 
     /* Wallet icon - और छोटा */
@@ -1036,6 +1081,11 @@
     .copy-btn:hover {
         background: rgba(255,255,255,0.2);
         transform: scale(1.1);
+    }
+
+    .copy-btn.copied {
+        background: rgba(75, 255, 100, 0.3);
+        color: #4CAF50;
     }
 
     /* Buttons container - और कॉम्पैक्ट */
@@ -1942,10 +1992,9 @@
                             <i class="fa-solid fa-credit-card"></i>
                             Visa Gold Card
                         </div>
-                        <!-- TIMER DISPLAY REMOVED FROM HTML -->
                     </div>
                     
-                    <!-- NEW: Card and Details side by side -->
+                    <!-- Card and Details side by side -->
                     <div class="credit-card-body">
                         <!-- Flip Card Container - SMALLER -->
                         <div class="flip-card-container">
@@ -2008,14 +2057,6 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Card logo - UPDATED: NOW ABOVE CVV SECTION -->
-                                    <!-- <div class="card-back-logo">
-                                        <div class="card-logo">
-                                            <div class="card-logo-main">VISA</div>
-                                            <div class="card-logo-type">Gold</div>
-                                        </div>
-                                    </div> -->
-                                    
                                     <!-- Security text -->
                                     <div class="security-text">
                                         For customer service call +1-800-123-4567
@@ -2024,29 +2065,56 @@
                             </div>
                         </div>
                         
-                        <!-- Card Details Box - Right Side SMALLER -->
+                        <!-- Card Details Box - Right Side WITH BUTTONS INSIDE -->
                         <div class="card-details-box">
+                            <!-- Card Details Title -->
                             <div class="card-details-title">Visa Gold Card Details</div>
+                            
+                            <!-- Card Details List - UPDATED: DEFAULT HIDDEN WITH *** -->
                             <ul class="card-details-list">
                                 <li class="card-details-item">
-                                    <span class="detail-label">Card Type</span>
-                                    <span class="detail-value free">Visa Gold</span>
+                                    <span class="detail-label">Card Holder</span>
+                                    <span class="detail-value">
+                                        <span class="real-value" style="display: none;">EISHA KHANNA</span>
+                                        <span class="hidden-value">•••• ••••••</span>
+                                        <button class="detail-copy-btn" data-copy="EISHA KHANNA">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </span>
                                 </li>
                                 <li class="card-details-item">
                                     <span class="detail-label">Card Number</span>
-                                    <span class="detail-value">4000 1234 5678 9010</span>
+                                    <span class="detail-value">
+                                        <span class="real-value" style="display: none;">4000 1234 5678 9010</span>
+                                        <span class="hidden-value">•••• •••• •••• 9010</span>
+                                        <button class="detail-copy-btn" data-copy="4000 1234 5678 9010">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </span>
                                 </li>
                                 <li class="card-details-item">
                                     <span class="detail-label">Expiry Date</span>
-                                    <span class="detail-value expiring">12/2020</span>
+                                    <span class="detail-value expiring">
+                                        <span class="real-value" style="display: none;">12/2020</span>
+                                        <span class="hidden-value">••/••••</span>
+                                        <button class="detail-copy-btn" data-copy="12/2020">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </span>
                                 </li>
                                 <li class="card-details-item">
-                                    <span class="detail-label">Card Holder</span>
-                                    <span class="detail-value">EISHA KHANNA</span>
+                                    <span class="detail-label">CVV Number</span>
+                                    <span class="detail-value">
+                                        <span class="real-value" style="display: none;">123</span>
+                                        <span class="hidden-value">•••</span>
+                                        <button class="detail-copy-btn" data-copy="123">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </span>
                                 </li>
                             </ul>
                             
-                            <!-- Card Buttons -->
+                            <!-- Card Buttons - NOW INSIDE THE CARD DETAILS BOX AT BOTTOM -->
                             <div class="card-buttons">
                                 <button class="card-btn show-details-btn" id="showDetailsBtn">
                                     <i class="fa-solid fa-eye"></i> Show Details
@@ -2185,6 +2253,55 @@
         
         // Flip Card Elements
         const flipCard = document.getElementById('flipCard');
+        
+        // NEW: Card details toggle functionality
+        let detailsVisible = false;
+        
+        // Function to show card details
+        function showCardDetails() {
+            const realValues = document.querySelectorAll('.real-value');
+            const hiddenValues = document.querySelectorAll('.hidden-value');
+            
+            // Show real values, hide hidden values
+            realValues.forEach(el => el.style.display = 'inline');
+            hiddenValues.forEach(el => el.style.display = 'none');
+            
+            // Show Hide Details button, hide Show Details button
+            showDetailsBtn.style.display = 'none';
+            hideDetailsBtn.style.display = 'block';
+            
+            detailsVisible = true;
+            
+            // Show notification
+            cardDetailsNotification.innerHTML = 'Card details are now visible';
+            cardDetailsNotification.style.display = 'block';
+            setTimeout(() => {
+                cardDetailsNotification.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Function to hide card details
+        function hideCardDetails() {
+            const realValues = document.querySelectorAll('.real-value');
+            const hiddenValues = document.querySelectorAll('.hidden-value');
+            
+            // Hide real values, show hidden values
+            realValues.forEach(el => el.style.display = 'none');
+            hiddenValues.forEach(el => el.style.display = 'inline');
+            
+            // Show Show Details button, hide Hide Details button
+            showDetailsBtn.style.display = 'block';
+            hideDetailsBtn.style.display = 'none';
+            
+            detailsVisible = false;
+            
+            // Show notification
+            cardDetailsNotification.innerHTML = 'Card details are now hidden';
+            cardDetailsNotification.style.display = 'block';
+            setTimeout(() => {
+                cardDetailsNotification.style.display = 'none';
+            }, 2000);
+        }
         
         // Timer variables - FUNCTIONALITY RAKHI HAI PAR DISPLAY NAHI
         let cardFlipInterval;
@@ -2334,6 +2451,7 @@
             // Copy to clipboard
             navigator.clipboard.writeText(accountNumber).then(function() {
                 // Show notification
+                copyNotification.textContent = 'Account number copied to clipboard!';
                 copyNotification.style.display = 'block';
                 
                 // Hide notification after 2 seconds
@@ -2343,12 +2461,12 @@
                 
                 // Button animation
                 this.innerHTML = '<i class="fas fa-check"></i>';
-                this.style.background = 'rgba(75, 255, 100, 0.3)';
+                this.classList.add('copied');
                 
                 // Reset button after 1.5 seconds
                 setTimeout(() => {
                     this.innerHTML = '<i class="fas fa-copy"></i>';
-                    this.style.background = 'rgba(255,255,255,0.1)';
+                    this.classList.remove('copied');
                 }, 1500);
                 
             }).catch(function(err) {
@@ -2432,16 +2550,9 @@
             });
         });
 
-        // Credit Card Button Functionality
+        // Credit Card Button Functionality - UPDATED
         showDetailsBtn.addEventListener('click', function() {
-            // Show card details notification
-            cardDetailsNotification.innerHTML = '<strong>Full Card Details:</strong><br>Card Number: 4000 1234 5678 9010<br>CVV: 123<br>PIN: ****';
-            cardDetailsNotification.style.display = 'block';
-            
-            // Hide notification after 3 seconds
-            setTimeout(function() {
-                cardDetailsNotification.style.display = 'none';
-            }, 3000);
+            showCardDetails();
             
             // Button animation
             this.style.transform = 'scale(0.95)';
@@ -2451,14 +2562,7 @@
         });
 
         hideDetailsBtn.addEventListener('click', function() {
-            // Show notification that details are hidden
-            cardDetailsNotification.innerHTML = 'Card details are now hidden';
-            cardDetailsNotification.style.display = 'block';
-            
-            // Hide notification after 2 seconds
-            setTimeout(function() {
-                cardDetailsNotification.style.display = 'none';
-            }, 2000);
+            hideCardDetails();
             
             // Button animation
             this.style.transform = 'scale(0.95)';
@@ -2559,9 +2663,59 @@
             });
         });
 
+        // NEW: Card details copy functionality - UPDATED
+        const detailCopyButtons = document.querySelectorAll('.detail-copy-btn');
+        detailCopyButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event bubbling
+                
+                const textToCopy = this.getAttribute('data-copy');
+                
+                // Only allow copying if details are visible
+                if (!detailsVisible) {
+                    cardDetailsNotification.innerHTML = 'Please click "Show Details" first to reveal the information';
+                    cardDetailsNotification.style.display = 'block';
+                    setTimeout(() => {
+                        cardDetailsNotification.style.display = 'none';
+                    }, 2000);
+                    return;
+                }
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(textToCopy).then(function() {
+                    // Show notification
+                    copyNotification.textContent = `"${textToCopy}" copied to clipboard!`;
+                    copyNotification.style.display = 'block';
+                    
+                    // Hide notification after 2 seconds
+                    setTimeout(function() {
+                        copyNotification.style.display = 'none';
+                    }, 2000);
+                    
+                    // Button animation
+                    const copyBtn = e.target.closest('.detail-copy-btn');
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    copyBtn.classList.add('copied');
+                    
+                    // Reset button after 1.5 seconds
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                        copyBtn.classList.remove('copied');
+                    }, 1500);
+                    
+                }).catch(function(err) {
+                    console.error('Failed to copy: ', err);
+                    alert(`Failed to copy: ${textToCopy}`);
+                });
+            });
+        });
+
         // Initialize the flip card functionality when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initFlipCard();
+            
+            // Hide the Hide Details button by default
+            hideDetailsBtn.style.display = 'none';
         });
     </script>
 </body>
